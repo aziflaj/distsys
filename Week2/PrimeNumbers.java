@@ -77,7 +77,7 @@ class PrimeNumbers {
     start = System.currentTimeMillis();
     checkPrimalityFixedSizePool(numbers);
     end = System.currentTimeMillis();
-    System.out.println("*** Thread-pool version took " + (end - start) + "ms ***");
+    System.out.println("*** 4-pool version took " + (end - start) + "ms ***");
     //*/
   }
 
