@@ -13,12 +13,22 @@ public class FileGrabberProMax extends AbstractFileGrabber {
   @Override
   public void download() throws Exception {
     List<Process> processes = new ArrayList<>();
-    int startByte = 0;
+    long startByte = 0;
+
+    if (!isPartialContentSupported()) {
+      throw new IOException("Partial content not supported");
+    } else {
+      System.out.println("Partial content supported");
+    }
 
     // run one process per chunk
     for (int i = 0; i < parallelismCount; i++) {
-      int offset = (i == parallelismCount - 1 ? getRemainingBytes() : 0);
-      int endByte = startByte + getChunkSize() - 1 + offset;
+      long offset = (i == parallelismCount - 1 ? getRemainingBytes() : 0);
+      long endByte = startByte + getChunkSize() - 1 + offset;
+
+      System.out.println("File size: " + getFileSize());
+      System.out.println("Chunk size: " + getChunkSize());
+      System.out.println("Downloading chunk " + i + " from " + startByte + " to " + endByte);
 
       ProcessBuilder pb = new ProcessBuilder(
           "java",
@@ -27,8 +37,8 @@ public class FileGrabberProMax extends AbstractFileGrabber {
           "com.aziflaj.uptdistsys.FileGrabberPro",
           source.toString(),
           destination,
-          Integer.toString(startByte),
-          Integer.toString(endByte));
+          Long.toString(startByte),
+          Long.toString(endByte));
 
       processes.add(pb.start());
 

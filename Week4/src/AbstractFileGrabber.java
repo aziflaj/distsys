@@ -3,6 +3,8 @@ package com.aziflaj.uptdistsys;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
+import java.util.Map;
 
 public abstract class AbstractFileGrabber {
   protected final URL source;
@@ -17,19 +19,38 @@ public abstract class AbstractFileGrabber {
 
   public abstract void download() throws Exception;
 
-  protected int getFileSize() throws IOException {
+  protected boolean isPartialContentSupported() throws IOException {
     HttpURLConnection connection = (HttpURLConnection) source.openConnection();
-    int fileSize = connection.getContentLength();
+    Map<String, List<String>> headers = connection.getHeaderFields();
     connection.disconnect();
 
-    return fileSize;
+    return headers.containsKey("Accept-Ranges");
   }
 
-  protected int getChunkSize() throws IOException {
+  protected long getFileSize() throws IOException {
+    HttpURLConnection connection = (HttpURLConnection) source.openConnection();
+    long fileSize = connection.getContentLengthLong();
+    connection.disconnect();
+
+    if (fileSize > 0) {
+      return fileSize;
+    }
+
+    // read the content length from the Content-Length header
+    Map<String, List<String>> headers = connection.getHeaderFields();
+    List<String> contentLength = headers.get("Content-Length");
+    if (contentLength != null) {
+      return Long.parseLong(contentLength.get(0));
+    }
+
+    throw new IOException("Could not determine file size");
+  }
+
+  protected long getChunkSize() throws IOException {
     return getFileSize() / parallelismCount;
   }
 
-  protected int getRemainingBytes() throws IOException {
+  protected long getRemainingBytes() throws IOException {
     return getFileSize() % parallelismCount;
   }
 }

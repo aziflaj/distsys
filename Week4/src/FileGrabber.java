@@ -21,14 +21,20 @@ public class FileGrabber extends AbstractFileGrabber {
   }
 
   public void download() throws IOException, InterruptedException {
-    int startByte = 0;
+    long startByte = 0;
+
+    if (!isPartialContentSupported()) {
+      throw new IOException("Partial content not supported");
+    } else {
+      System.out.println("Partial content supported");
+    }
 
     ExecutorService executor = Executors.newFixedThreadPool(parallelismCount);
     CountDownLatch latch = new CountDownLatch(parallelismCount);
 
     for (int i = 0; i < parallelismCount; i++) {
-      int offset = (i == parallelismCount - 1 ? getRemainingBytes() : 0);
-      int endByte = startByte + getChunkSize() - 1 + offset;
+      long offset = (i == parallelismCount - 1 ? getRemainingBytes() : 0);
+      long endByte = startByte + getChunkSize() - 1 + offset;
 
       executor.execute(new DownloadChunk(startByte, endByte, latch, i));
       startByte = endByte + 1;
@@ -39,11 +45,11 @@ public class FileGrabber extends AbstractFileGrabber {
   }
 
   private class DownloadChunk implements Runnable {
-    private final int startByte, endByte;
+    private final long startByte, endByte;
     private final CountDownLatch latch;
     private final int threadIdx;
 
-    public DownloadChunk(int startByte, int endByte, CountDownLatch latch, int idx) {
+    public DownloadChunk(long startByte, long endByte, CountDownLatch latch, int idx) {
       this.startByte = startByte;
       this.endByte = endByte;
       this.latch = latch;
