@@ -34,23 +34,11 @@ public class FileGrabberPro {
       try (RandomAccessFile outFile = new RandomAccessFile(destination, "rw")) {
         outFile.seek(startByte);
         while ((bytes = in.read(buffer)) != -1) {
-          lock(destination);
+          FileLock lock = outFile.getChannel().lock();
           outFile.write(buffer, 0, bytes);
-          unlock(destination);
+          lock.release();
         }
       }
     }
-  }
-
-  private static void lock(String destination) throws IOException {
-    File file = new File(destination + ".lock");
-    FileOutputStream fos = new FileOutputStream(file);
-    FileChannel channel = fos.getChannel();
-    FileLock lock = channel.lock();
-  }
-
-  private static void unlock(String destination) throws IOException {
-    File file = new File(destination + ".lock");
-    file.delete();
   }
 }

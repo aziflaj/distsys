@@ -26,10 +26,6 @@ public class FileGrabberProMax extends AbstractFileGrabber {
       long offset = (i == parallelismCount - 1 ? getRemainingBytes() : 0);
       long endByte = startByte + getChunkSize() - 1 + offset;
 
-      System.out.println("File size: " + getFileSize());
-      System.out.println("Chunk size: " + getChunkSize());
-      System.out.println("Downloading chunk " + i + " from " + startByte + " to " + endByte);
-
       ProcessBuilder pb = new ProcessBuilder(
           "java",
           "-cp",

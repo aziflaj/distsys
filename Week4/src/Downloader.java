@@ -39,11 +39,14 @@ public class Downloader {
 
   private static void threadedDownload(URL url, String destPath) throws IOException, InterruptedException {
     FileGrabber grabber = new FileGrabber(url, destPath, 4);
+    // FileGrabber grabber = new FileGrabber(url, destPath, 255);
     grabber.download();
   }
 
   private static void processDownload(URL url, String destPath) throws Exception {
-    FileGrabberProMax grabber = new FileGrabberProMax(url, destPath, 4);
+    int cores = Runtime.getRuntime().availableProcessors();
+    // FileGrabberProMax grabber = new FileGrabberProMax(url, destPath, 4);
+    FileGrabberProMax grabber = new FileGrabberProMax(url, destPath, cores - 1);
     grabber.download();
   }
 }
