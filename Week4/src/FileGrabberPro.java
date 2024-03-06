@@ -4,9 +4,6 @@ import java.io.*;
 import java.net.URI;
 import java.net.URL;
 import java.net.HttpURLConnection;
-import java.nio.channels.Channels;
-import java.nio.channels.ReadableByteChannel;
-import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 
 public class FileGrabberPro {

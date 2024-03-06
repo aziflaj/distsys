@@ -18,4 +18,4 @@ run-p: build
 clean:
 	rm -f $(OUT)
 
-all: build run
+all: build run-t
