@@ -23,9 +23,6 @@ public class FileGrabberPro {
     int startByte = Integer.parseInt(args[2]);
     int endByte = Integer.parseInt(args[3]);
 
-    // sleep for a random amount of time
-    Thread.sleep((long) (Math.random() * 5000));
-
     // download the chunk
     HttpURLConnection connection = (HttpURLConnection) source.openConnection();
     connection.setRequestProperty("Range", "bytes=" + startByte + "-" + endByte);

@@ -19,4 +19,3 @@ clean:
 	rm -f $(OUT)
 
 all: build run
-
