@@ -2,6 +2,7 @@ package com.aziflaj.uptdistsys;
 
 import java.io.*;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.HttpURLConnection;
 import java.nio.channels.FileLock;
@@ -20,7 +21,13 @@ public class FileGrabberPro {
     int startByte = Integer.parseInt(args[2]);
     int endByte = Integer.parseInt(args[3]);
 
+    // downloadFile(sourceStr, destination, startByte, endByte);
+
     // download the chunk
+    downloadFileV2(source, destination, startByte, endByte);
+  }
+
+  private static void downloadFileV2(URL source, String destination, int startByte, int endByte) throws IOException {
     HttpURLConnection connection = (HttpURLConnection) source.openConnection();
     connection.setRequestProperty("Range", "bytes=" + startByte + "-" + endByte);
 
@@ -36,6 +43,8 @@ public class FileGrabberPro {
           lock.release();
         }
       }
+    } finally {
+      connection.disconnect();
     }
   }
 }
