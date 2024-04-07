@@ -1,0 +1,19 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 2em;
+  padding: 0;
+}
+h1 {
+  color: #333;
+}
+p {
+  color: #666;
+}
+em {
+  display: block;
+  color: #999;
+}
+.verysmall {
+  font-size: 0.6em;
+}
+
